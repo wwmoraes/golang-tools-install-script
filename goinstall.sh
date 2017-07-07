@@ -21,11 +21,11 @@ elif [ "$1" == "--arm" ]; then
 elif [ "$1" == "--remove" ]; then
     rm -rf "$HOME/.go/"
     rm -rf "$HOME/go/"
-    sed -i '/# GoLang/d' "$HOME/.bashrc"
-    sed -i '/export GOROOT/d' "$HOME/.bashrc"
-    sed -i '/:$GOROOT/d' "$HOME/.bashrc"
-    sed -i '/export GOPATH/d' "$HOME/.bashrc"
-    sed -i '/:$GOPATH/d' "$HOME/.bashrc"
+    sed -i "/# GoLang/d" "$HOME/.bashrc"
+    sed -i "/export GOROOT/d" "$HOME/.bashrc"
+    sed -i "/:\$GOROOT/d" "$HOME/.bashrc"
+    sed -i "/export GOPATH/d" "$HOME/.bashrc"
+    sed -i "/:\$GOPATH/d" "$HOME/.bashrc"
     echo "Go removed."
     exit 0
 elif [ "$1" == "--help" ]; then
@@ -47,13 +47,13 @@ curl https://storage.googleapis.com/golang/$DFILE | tar -C "$HOME/.go" -xz
 touch "$HOME/.bashrc"
 {
     echo '# GoLang'
-    echo 'export GOROOT=$HOME/.go'
-    echo 'export PATH=$PATH:$GOROOT/bin'
-    echo 'export GOPATH=$HOME/go'
-    echo 'export PATH=$PATH:$GOPATH/bin'
+    echo "export GOROOT=\$HOME/.go"
+    echo "export PATH=\$PATH:\$GOROOT/bin"
+    echo "export GOPATH=\$HOME/go"
+    echo "export PATH=\$PATH:\$GOPATH/bin"
 } >> "$HOME/.bashrc"
 
-mkdir -p $HOME/go/{src,pkg,bin}
+mkdir -p "$HOME"/go/{src,pkg,bin}
 echo -e "\nGo $VERSION was installed.\nMake sure to relogin into your shell or run:"
 echo -e "\n\tsource $HOME/.bashrc\n\nto update your environment variables."
 echo "Tip: Opening a new terminal window usually just works. :)"
