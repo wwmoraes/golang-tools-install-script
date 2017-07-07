@@ -8,3 +8,4 @@ matrix:
 install: true
 script:
 - ./goinstall.sh --64
+- ./tests/main.sh

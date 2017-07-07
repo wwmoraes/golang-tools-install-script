@@ -40,15 +40,9 @@ if [ -d "$HOME/.go" ] || [ -d "$HOME/go" ]; then
     echo "Installation directories already exist. Exiting."
     exit 1
 fi
-echo "Downloading $DFILE ..."
-wget https://storage.googleapis.com/golang/$DFILE -O /tmp/go.tar.gz
-if [ $? -ne 0 ]; then
-    echo "Download failed! Exiting."
-    exit 1
-fi
-echo "Extracting ..."
-tar -C "$HOME" -xzf /tmp/go.tar.gz
-mv "$HOME/go" "$HOME/.go"
+echo "Downloading $DFILE and extracting..."
+curl https://storage.googleapis.com/golang/$DFILE | tar -C "$HOME/.go" -xz
+
 touch "$HOME/.bashrc"
 {
     echo '# GoLang'
