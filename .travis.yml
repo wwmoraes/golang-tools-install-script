@@ -17,5 +17,4 @@ before_install:
 install: true
 script:
 - shellcheck ./goinstall.sh || travis_terminate 1
-- ./goinstall.sh --64 || travis_terminate 1
 - ./tests/main.sh
