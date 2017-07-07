@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-../goinstall.sh --64
+$(dirname "$0")/../goinstall.sh --64
 
 source ~/.bashrc
 
