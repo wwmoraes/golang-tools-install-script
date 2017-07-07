@@ -41,6 +41,7 @@ if [ -d "$HOME/.go" ] || [ -d "$HOME/go" ]; then
     exit 1
 fi
 echo "Downloading $DFILE and extracting..."
+mkdir "$HOME/.go"
 curl https://storage.googleapis.com/golang/$DFILE | tar -C "$HOME/.go" -xz
 
 touch "$HOME/.bashrc"

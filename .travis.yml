@@ -5,7 +5,11 @@ matrix:
     - os: linux
       dist: xenial
 
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install shellcheck ; fi
+
 install: true
 script:
+- shellcheck ./goinstall.sh || travis_terminate 1
 - ./goinstall.sh --64 || travis_terminate 1
 - ./tests/main.sh
