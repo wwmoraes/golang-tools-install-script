@@ -10,10 +10,13 @@ pushd $GOPATH/src/hello
 cat >hello.go <<EOF
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "runtime"
+)
 
 func main() {
-    fmt.Printf("hello, world\n")
+    fmt.Printf("go version %s %s/%s\n", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
 EOF
 go build
