@@ -57,4 +57,3 @@ mkdir -p "$HOME"/go/{src,pkg,bin}
 echo -e "\nGo $VERSION was installed.\nMake sure to relogin into your shell or run:"
 echo -e "\n\tsource $HOME/.bashrc\n\nto update your environment variables."
 echo "Tip: Opening a new terminal window usually just works. :)"
-rm -f /tmp/go.tar.gz

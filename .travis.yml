@@ -3,7 +3,12 @@ language: bash
 matrix:
   include:
     - os: linux
+      dist: trusty
+    - os: linux
       dist: xenial
+    - os: linux
+      dist: zesty
+    
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install shellcheck ; fi
