@@ -17,5 +17,6 @@ func main() {
 }
 EOF
 go build
+go install
 hello
 popd
