@@ -1,0 +1,10 @@
+language: bash
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+
+install: true
+script:
+- ./goinstall.sh --64
