@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
 
-echo "Environment before setup:"
-env
+echo "Go env before setup:"
+env | grep "^GO"
 
 "$(dirname "$0")/../goinstall.sh" --64
 
-source ~/.bashrc
+exec bash
 
-echo "Environment after setup:"
-env
+echo "Go env after setup:"
+env | grep "^GO"
 
 mkdir -p "$GOPATH/src/hello"
 pushd "$GOPATH/src/hello"
