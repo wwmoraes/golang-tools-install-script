@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-$(dirname "$0")/../goinstall.sh --64
+"$(dirname "$0")/../goinstall.sh" --64
 
 source ~/.bashrc
 
-mkdir -p $GOPATH/src/hello
-pushd $GOPATH/src/hello
+mkdir -p "$GOPATH/src/hello"
+pushd "$GOPATH/src/hello"
 cat >hello.go <<EOF
 package main
 
