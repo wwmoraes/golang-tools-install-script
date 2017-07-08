@@ -6,10 +6,12 @@ env | grep "^GO"
 
 "$(dirname "$0")/../goinstall.sh" --64
 
-exec bash
+source ~/.bashrc
 
 echo "Go env after setup:"
 env | grep "^GO"
+cat ~/.bashrc
+cat ~/.profile
 
 mkdir -p "$GOPATH/src/hello"
 pushd "$GOPATH/src/hello"
