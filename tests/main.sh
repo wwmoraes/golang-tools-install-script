@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
 
+echo "Environment before setup:"
+env
+
 "$(dirname "$0")/../goinstall.sh" --64
 
 source ~/.bashrc
+
+echo "Environment after setup:"
+env
 
 mkdir -p "$GOPATH/src/hello"
 pushd "$GOPATH/src/hello"

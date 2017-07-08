@@ -48,7 +48,7 @@ touch "$HOME/.bashrc"
 {
     echo '# GoLang'
     echo "export GOROOT=\$HOME/.go"
-    echo "export PATH=\$PATH:\$GOROOT/bin"
+    echo "export PATH=\$GOROOT/bin:\$PATH"
     echo "export GOPATH=\$HOME/go"
     echo "export PATH=\$PATH:\$GOPATH/bin"
 } >> "$HOME/.bashrc"
