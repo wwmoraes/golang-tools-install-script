@@ -10,16 +10,19 @@ print_help() {
     echo -e "  --64\t\tInstall 64-bit version"
     echo -e "  --arm\t\tInstall armv6 version"
     echo -e "  --darwin\tInstall darwin version"
+    echo -e "  --force\tForce install"
     echo -e "  --remove\tTo remove currently installed version"
 }
 
-if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
-    # assume Zsh
-    shell_profile="zshrc"
-elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-    # assume Bash
-    shell_profile="bashrc"
-fi
+# Use the current shell to set paths
+case "${SHELL##*/}" in
+    "bash")
+        shell_profile="bashrc";;
+    "zsh")
+        shell_profile="zshrc";;
+    *|"")
+        shell_profile="profile";;
+esac
 
 if [ "$1" == "--32" ]; then
     DFILE="go$VERSION.linux-386.tar.gz"
@@ -46,9 +49,13 @@ else
     exit 1
 fi
 
-if [ -d "$HOME/.go" ] || [ -d "$HOME/go" ]; then
-    echo "The 'go' or '.go' directories already exist. Exiting."
-    exit 1
+if [ -d "$HOME/.go" ]; then
+    if [[ ! $@ =~ "--force" ]]; then
+        echo "The '.go' directories already exist. Exiting."
+        exit 1
+    fi
+
+    rm -rf "$HOME/.go"
 fi
 
 echo "Downloading $DFILE ..."
@@ -60,19 +67,30 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Extracting File..."
-tar -C "$HOME" -xzf /tmp/go.tar.gz
-mv "$HOME/go" "$HOME/.go"
+tar -C "/tmp" -xzf /tmp/go.tar.gz
+mv "/tmp/go" "$HOME/.go"
 touch "$HOME/.${shell_profile}"
-{
-    echo '# GoLang'
-    echo 'export GOROOT=$HOME/.go'
-    echo 'export PATH=$PATH:$GOROOT/bin'
-    echo 'export GOPATH=$HOME/go'
-    echo 'export PATH=$PATH:$GOPATH/bin'
-} >> "$HOME/.${shell_profile}"
+
+grep -E 'export GOROOT=' "$HOME/.${shell_profile}" > /dev/null \
+    && sed -E 's/^(export GOROOT=).*/\1$HOME\/.go/' "$HOME/.${shell_profile}" | tee -a "$HOME/.${shell_profile}" > /dev/null \
+    || echo 'export GOROOT=$HOME/.go' >> "$HOME/.${shell_profile}"
+
+grep -E 'export GOPATH=' "$HOME/.${shell_profile}" > /dev/null \
+    && sed -E 's/^(export GOPATH=).*/\1$HOME\/go/' "$HOME/.${shell_profile}" | tee -a "$HOME/.${shell_profile}" > /dev/null \
+    || echo 'export GOPATH=$HOME/go' >> "$HOME/.${shell_profile}"
+
+grep -E 'export PATH=$PATH:$GOROOT/bin' "$HOME/.${shell_profile}" > /dev/null \
+    || echo 'export PATH=$PATH:$GOROOT/bin' >> "$HOME/.${shell_profile}"
+
+grep -E 'export PATH=$PATH:$GOPATH/bin' "$HOME/.${shell_profile}" > /dev/null \
+    || echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.${shell_profile}"
 
 mkdir -p $HOME/go/{src,pkg,bin}
-echo -e "\nGo $VERSION was installed.\nMake sure to relogin into your shell or run:"
+
+source "$HOME/.${shell_profile}"
+go
+
+echo -e "\nGo $VERSION was installed.\nMake sure to relogin into your other shells or run:"
 echo -e "\n\tsource $HOME/.${shell_profile}\n\nto update your environment variables."
 echo "Tip: Opening a new terminal window usually just works. :)"
 rm -f /tmp/go.tar.gz
