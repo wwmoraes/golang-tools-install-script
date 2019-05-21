@@ -12,7 +12,7 @@ Tested with:
 Download with wget or clone the repository
 
 ```shell
-wget https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh
+wget https://raw.githubusercontent.com/wwmoraes/golang-tools-install-script/master/goinstall.sh
 ```
 
 ## Installation examples
