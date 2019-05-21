@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-VERSION="1.11.4"
-
 print_help() {
     echo "Usage: bash goinstall.sh OPTIONS"
     echo -e "\nOPTIONS:"
@@ -12,6 +10,14 @@ print_help() {
     echo -e "  --darwin\tInstall darwin version"
     echo -e "  --force\tForce install"
     echo -e "  --remove\tTo remove currently installed version"
+}
+
+find_latest() {
+    #Download Latest Go
+    GOURLREGEX="https://dl.google.com/go/go[0-9\.]+\.$1-$2.tar.gz"
+    echo "Finding latest stable version of Go for $1 $2..."
+    url="$(wget -qO- https://golang.org/dl/ | grep -oP "https:\/\/dl\.google\.com\/go\/go([0-9\.]+)\.$1-$2\.tar\.gz" | head -n 1 )"
+    VERSION="$(echo $url | grep -oP 'go[0-9\.]+' | grep -oP '[0-9\.]+' | head -c -2 )"
 }
 
 # Use the current shell to set paths
@@ -25,13 +31,17 @@ case "${SHELL##*/}" in
 esac
 
 if [ "$1" == "--32" ]; then
-    DFILE="go$VERSION.linux-386.tar.gz"
+    OS=linux
+    PLATFORM=386
 elif [ "$1" == "--64" ]; then
-    DFILE="go$VERSION.linux-amd64.tar.gz"
+    OS=linux
+    PLATFORM=amd64
 elif [ "$1" == "--arm" ]; then
-    DFILE="go$VERSION.linux-armv6l.tar.gz"
+    OS=linux
+    PLATFORM=arm6l
 elif [ "$1" == "--darwin" ]; then
-    DFILE="go$VERSION.darwin-amd64.tar.gz"
+    OS=darwin
+    PLATFORM=amd64
 elif [ "$1" == "--remove" ]; then
     rm -rf "$HOME/.go/"
     sed -i '/# GoLang/d' "$HOME/.${shell_profile}"
@@ -48,6 +58,9 @@ else
     print_help
     exit 1
 fi
+
+find_latest $OS $PLATFORM
+DFILE="go$VERSION.$OS-$PLATFORM.tar.gz"
 
 if [ -d "$HOME/.go" ]; then
     if [[ ! $@ =~ "--force" ]]; then
