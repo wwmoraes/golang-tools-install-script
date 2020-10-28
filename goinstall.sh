@@ -16,8 +16,8 @@ find_latest() {
     #Download Latest Go
     GOURLREGEX="https://dl.google.com/go/go[0-9\.]+\.$1-$2.tar.gz"
     echo "Finding latest stable version of Go for $1 $2..."
-    url="$(wget -qO- https://golang.org/dl/ | grep -oP "https:\/\/dl\.google\.com\/go\/go([0-9\.]+)\.$1-$2\.tar\.gz" | head -n 1 )"
-    VERSION="$(echo $url | grep -oP 'go[0-9\.]+' | grep -oP '[0-9\.]+' | head -c -2 )"
+    url="$(wget -qO- https://golang.org/dl/ | grep -E \"\/dl\/go[0-9\.]+\.$1-$2\.tar\.gz\" | head -n 1 )"
+    VERSION="$(echo $url | sed -E 's/.*go([0-9\.]+)\..*/\1/' )"
 }
 
 # Use the current shell to set paths
@@ -101,7 +101,7 @@ grep -E 'export PATH=$PATH:$GOPATH/bin' "$HOME/.${shell_profile}" > /dev/null \
 mkdir -p $HOME/go/{src,pkg,bin}
 
 source "$HOME/.${shell_profile}"
-go
+go version
 
 echo -e "\nGo $VERSION was installed.\nMake sure to relogin into your other shells or run:"
 echo -e "\n\tsource $HOME/.${shell_profile}\n\nto update your environment variables."
